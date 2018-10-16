@@ -12,7 +12,8 @@ export class AppComponent {
   socket: SocketIOClient.Socket;
 
   constructor() {
-    this.socket = socketIo('http://localhost:2112');
+    socketIo();
+    this.socket = socketIo();
   }
 
   ngOnInit() {
