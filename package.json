@@ -5,7 +5,9 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node app.js",
+    "listen": "nodemon app.js",
+    "dev": "babel-watch server.js",
     "test": "ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor"
@@ -20,8 +22,16 @@
     "@angular/platform-browser": "^2.3.1",
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
+    "@types/socket.io-client": "^1.4.32",
+    "body-parser": "^1.18.3",
     "core-js": "^2.4.1",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.8",
     "rxjs": "^5.0.1",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.2"
   },
