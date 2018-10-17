@@ -15,50 +15,6 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'dist/')));
 
-// Generic error handler used by all endpoints.
-function handleError(res, reason, message, code) {
-  console.log(`ERROR: ${reason}`);
-  res.status(code || 500).json({
-    "error": message
-  });
-};
-
-const API = 'api';
-const questionCollection = 'QUESTIONS_COLLECTION';
-
-// This will allow Angular to handle the routing
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve('dist/index.html'));
-});
-
-// get all questions
-app.get(`/${API}/questions`, function (req, res) {
-  db.collection(questionCollection).find({}).toArray(function (err, docs) {
-    if (err) {
-      handleError(res, err.message, "Failed to get questions.");
-    } else {
-      res.status(200).json(docs);
-    }
-  });
-});
-
-app.post(`/${API}/question`, function (req, res) {
-  var newQuestion = req.body;
-  newQuestion.createDate = new Date();
-
-  if (!req.body.content) {
-    handleError(res, "Invalid request", 400);
-  } else {
-    db.collection(questionCollection).insertOne(newQuestion, function (err, doc) {
-      if (err) {
-        handleError(res, err.message, "Failed to create new question.");
-      } else {
-        res.status(201).json(doc.ops[0]);
-      }
-    });
-  }
-});
-
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 let db;
 
@@ -85,3 +41,171 @@ mongodb.MongoClient.connect(
     socketio.initSocketServer(server);
   }
 );
+
+const API = 'api';
+const questionCollection = 'QUESTIONS_COLLECTION';
+const categoryCollection = 'CATEGORY_COLLECTION';
+const scoreCollection = 'SCORE_COLLECTION';
+const answerCollection = 'ANSWER_COLLECTION'
+const userCollection = 'USER_COLLECTION';
+
+// Generic error handler used by all endpoints.
+function handleError(res, reason, message, code) {
+  console.log(`ERROR: ${reason}`);
+  res.status(code || 500).json({
+    "error": message
+  });
+};
+
+// This will allow Angular to handle the routing
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve('dist/index.html'));
+});
+
+/* ===== Category API ===== */
+
+app.get(`/${API}/categories`, function (req, res) {
+  db.collection(categoryCollection).find({}).toArray(function (err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post(`/${API}/category`, function (req, res) {
+  let category = req.body;
+  category.createDate = new Date();
+
+  if (!req.body.content) {
+    handleError(res, "Invalid request", 400);
+  } else {
+    db.collection(categoryCollection).insertOne(category, function (err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed");
+      } else {
+        res.status(201).json(doc.ops[0]);
+      }
+    });
+  }
+});
+
+
+/* ===== Question(s) API =====*/
+
+app.get(`/${API}/questions`, function (req, res) {
+  db.collection(questionCollection).find({}).toArray(function (err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed to get questions.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post(`/${API}/question`, function (req, res) {
+  let question = req.body;
+  question.createDate = new Date();
+
+  if (!req.body.content) {
+    handleError(res, "Invalid request", 400);
+  } else {
+    db.collection(questionCollection).insertOne(question, function (err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed to create new question.");
+      } else {
+        res.status(201).json(doc.ops[0]);
+      }
+    });
+  }
+});
+
+
+/* ===== Answer API ===== */
+
+app.get(`/${API}/answer`, function (req, res) {
+  db.collection(answerCollection).find({}).toArray(function (err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post(`/${API}/answer`, function (req, res) {
+  let answer = req.body;
+  answer.createDate = new Date();
+
+  if (!req.body.content) {
+    handleError(res, "Invalid request", 400);
+  } else {
+    db.collection(answerCollection).insertOne(score, function (err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed");
+      } else {
+        res.status(201).json(doc.ops[0]);
+      }
+    });
+  }
+});
+
+
+/* ===== Score API ===== */
+
+app.get(`/${API}/score`, function (req, res) {
+  db.collection(scoreCollection).find({}).toArray(function (err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post(`/${API}/score`, function (req, res) {
+  let score = req.body;
+  score.createDate = new Date();
+
+  if (!req.body.content) {
+    handleError(res, "Invalid request", 400);
+  } else {
+    db.collection(scoreCollection).insertOne(score, function (err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed");
+      } else {
+        res.status(201).json(doc.ops[0]);
+      }
+    });
+  }
+});
+
+/* ===== User API ===== */
+
+app.get(`/${API}/user`, function (req, res) {
+  db.collection(userCollection).find({}).toArray(function (err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post(`/${API}/user`, function (req, res) {
+  let user = req.body;
+  user.createDate = new Date();
+
+  if (!req.body.content) {
+    handleError(res, "Invalid request", 400);
+  } else {
+    db.collection(userCollection).insertOne(user, function (err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed");
+      } else {
+        res.status(201).json(doc.ops[0]);
+      }
+    });
+  }
+});
